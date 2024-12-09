@@ -54,19 +54,22 @@ class Music(commands.Cog):
             selected_url = search_results[choice - 1]['url']
 
             # Perguntar se deseja parar a música atual antes de tocar a nova
-            if ctx.voice_client.is_playing():
-                await ctx.send("Já estou tocando uma música! Você quer parar a música atual para tocar a nova? Responda 'sim' ou 'não'.")
-                
-                def stop_check(msg):
-                    return msg.author == ctx.author and msg.content.lower() in ['sim', 'não']
-                
-                response = await self.bot.wait_for('message', check=stop_check, timeout=30)
-                
-                if response.content.lower() == 'sim':
-                    ctx.voice_client.stop()  # Para a música atual
-                else:
-                    await ctx.send("A música atual continuará tocando.")
-                    return  # Se o usuário não quiser parar a música atual, não faz nada
+            try:
+                if ctx.voice_client.is_playing():
+                    await ctx.send("Já estou tocando uma música! Você quer parar a música atual para tocar a nova? Responda 'sim' ou 'não'.")
+                    
+                    def stop_check(msg):
+                        return msg.author == ctx.author and msg.content.lower() in ['sim', 'não']
+                    
+                    response = await self.bot.wait_for('message', check=stop_check, timeout=30)
+                    
+                    if response.content.lower() == 'sim':
+                        ctx.voice_client.stop()  # Para a música atual
+                    else:
+                        await ctx.send("A música atual continuará tocando.")
+                        return  # Se o usuário não quiser parar a música atual, não faz nada
+            except:
+                print("Ctx.voice_client não tem is_playing")
 
             # Toca a música escolhida
             await self.play_music(ctx, selected_url)
@@ -75,9 +78,6 @@ class Music(commands.Cog):
             await ctx.send("Você não escolheu nenhuma opção a tempo!")
         except ValueError:
             await ctx.send("Escolha inválida! Tente novamente com um número válido.")
-
-
-
 
 
     async def play_music(self, ctx, url):

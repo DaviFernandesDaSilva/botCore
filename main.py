@@ -4,6 +4,7 @@ from discord.ext import commands
 import logging
 import os
 import asyncio
+import time
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -12,12 +13,6 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
 bot = commands.Bot(command_prefix="!!", intents=discord.Intents.all(), application_id=int(os.getenv("BOT_ID")))
-
-import time
-from datetime import datetime
-import asyncio
-import discord
-from discord.ext import commands
 
 ##CASO COMANDO INVÁLIDO
 @bot.event
