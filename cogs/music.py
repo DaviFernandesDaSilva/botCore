@@ -119,14 +119,14 @@ class Music(commands.Cog):
 
     async def download_audio(self, url):
         ydl_opts = {
-            'format': 'bestaudio/best',
-            'extractaudio': True,
-            'audioquality': 1,
-            'outtmpl': './downloads/%(id)s.%(ext)s',
-            'quiet': True,
-            'noplaylist': True,
-            'simulate': True,
-            'forceurl': True
+            'format': 'bestaudio/best',  # A melhor qualidade de áudio disponível
+            'extractaudio': True,  # Extrai apenas o áudio
+            'audioquality': 1,  # Melhor qualidade de áudio
+            'outtmpl': './downloads/%(id)s.%(ext)s',  # Define o diretório de saída para o áudio
+            'quiet': True,  # Não exibe mensagens do yt-dlp
+            'noplaylist': True,  # Evita baixar playlists inteiras
+            'simulate': True,  # Simula o download (não faz o download real, apenas obtém o link)
+            'forceurl': True  # Força a obtenção do link diretamente
         }
 
         loop = asyncio.get_event_loop()
@@ -134,8 +134,10 @@ class Music(commands.Cog):
         def fetch_audio_url():
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info_dict = ydl.extract_info(url, download=False)
+                # Procura por links de áudio direto que são compatíveis com o FFmpeg
                 for format in info_dict['formats']:
-                    if format.get('acodec') != 'none':
+                    # Filtra para pegar um formato de áudio adequado
+                    if format.get('acodec') != 'none' and format.get('url'):
                         return format['url']
                 return None
 
