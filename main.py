@@ -96,6 +96,7 @@ async def syncReload(ctx, guild=None):
 @bot.event
 async def on_ready():
     # Obtendo a data e hora atual
+    await bot.tree.sync()
     now = datetime.now()
     data_hora = now.strftime("%d/%m/%Y %H:%M:%S")  # Formato: Dia/Mês/Ano Hora:Minuto:Segundo
     
@@ -107,12 +108,15 @@ async def on_ready():
     
     print(f"🟢 Bot conectado como {bot.user}. Data e Hora de Conexão: {data_hora}")
 
-async def main():
+async def load():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
             await bot.load_extension(f'cogs.{filename[:-3]}')
 
-    TOKEN = os.getenv("DISCORD_TOKEN")
-    await bot.start(TOKEN)
+async def main():
+    async with bot:
+        await load();
+        TOKEN = os.getenv("DISCORD_TOKEN")
+        await bot.start(TOKEN)
 
 asyncio.run(main())
