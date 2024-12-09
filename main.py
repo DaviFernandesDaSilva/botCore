@@ -20,24 +20,36 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         # Tratamento específico para comando não encontrado
         await ctx.send("❌ Comando não encontrado. Use `!!ajuda` para ver a lista de comandos disponíveis.")
+    elif isinstance(error, commands.CheckFailure):
+        # Tratamento para falha no check (ex: delay de comando)
+        print("⚠️ Você não pode usar este comando agora. Aguarde o tempo de delay.")  # Remova o await
     else:
         # Para outros tipos de erro, se necessário
         await ctx.send(f"⚠️ Ocorreu um erro: {str(error)}")
-        # Imprime o erro no console
         print(f"Erro em {ctx.command}: {error}")
 
-# PARA SINCRONIZAR
+# Variável global para verificar se o comando está sendo executado
+is_syncing = False
+
 @bot.command(hidden=True)
 @commands.is_owner()
 async def syncReload(ctx, guild=None):
+    global is_syncing
+    
+    if is_syncing:
+        await ctx.send("O processo de recarga já está em andamento. Tente novamente mais tarde.")
+        return
+
     try:
         # Marca o tempo de início
+        is_syncing = True
         start_time = time.time()
 
-        canal_id = 1315495514132971583 # ID do canal de um dos servidores
+        canal_id = 1315495514132971583  # ID do canal de um dos servidores
         canal = bot.get_channel(canal_id)
         now = datetime.now()
         data_hora = now.strftime("%d/%m/%Y %H:%M:%S")
+        
         if canal:
             await canal.send(f"**🔄 O Bot começou a recarregar às {data_hora}... 🔄**")
         
@@ -46,6 +58,7 @@ async def syncReload(ctx, guild=None):
             synced = await bot.tree.sync()
         else:
             synced = await bot.tree.sync(guild=discord.Object(id=int(guild)))
+        
         print(f"Comandos sincronizados: {synced}")
 
         # Recarrega todos os cogs na pasta 'cogs'
@@ -56,12 +69,10 @@ async def syncReload(ctx, guild=None):
             try:
                 # Verifica se o cog está carregado e o descarrega
                 if f'cogs.{cog_name}' in bot.extensions:
-                    print(f"Descarregando o módulo {cog_name}...")
                     await bot.unload_extension(f'cogs.{cog_name}')
                     print(f"Módulo {cog_name} descarregado com sucesso!")
 
                 # Carrega ou recarrega o cog
-                print(f"Carregando o módulo {cog_name}...")
                 await bot.load_extension(f'cogs.{cog_name}')
                 print(f"Módulo {cog_name} carregado com sucesso!")
                 await asyncio.sleep(0.5)  # Pausa para evitar sobrecarga
@@ -90,6 +101,9 @@ async def syncReload(ctx, guild=None):
         # Tratamento de erros gerais
         print(f"Erro durante o syncReload: {e}")
         await ctx.send(f"⚠️ **Erro durante o syncReload:** `{e}`")
+
+    finally:
+        is_syncing = False
 
 
 #AO LIGAR

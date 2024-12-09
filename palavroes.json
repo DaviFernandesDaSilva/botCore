@@ -1,0 +1,40 @@
+{
+  "palavroes": [
+    {
+      "word": "(m|M)erda",
+      "response": "Por favor, evite usar palavras inadequadas."
+    },
+    {
+      "word": "(p|P)orra",
+      "response": "Não é legal usar esse tipo de linguagem."
+    },
+    {
+      "word": "(c|C)aralho",
+      "response": "Por favor, mantenha a educação."
+    },
+    {
+      "word": "(c|C)abrão|(k|K)abrão",
+      "response": "Esse tipo de linguagem não é bem-vinda aqui."
+    },
+    {
+      "word": "(v|V)agabundo",
+      "response": "Respeito é fundamental, por favor."
+    },
+    {
+      "word": "(i|I)diota",
+      "response": "Vamos manter a educação na conversa."
+    },
+    {
+      "word": "(f|F)ilho da puta",
+      "response": "Evite usar palavrões, por favor."
+    },
+    {
+      "word": "(p|P)uta que pariu",
+      "response": "Por favor, seja mais educado em suas palavras."
+    },
+    {
+      "word": "(d|D)esgraça",
+      "response": "Vamos tentar ser mais respeitosos, ok?"
+    }
+  ]
+}

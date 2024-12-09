@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 
+
 class ContextMenuCog(commands.Cog, name="Comandos de menu de contexto"):
     def __init__(self, bot):
         self.bot = bot
