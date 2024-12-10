@@ -24,7 +24,7 @@ BotCore é um bot para Discord desenvolvido em Python, projetado para oferecer f
   ├── requirements.txt        # Dependências do projeto
   ├── cogs/                   # Diretório com módulos de comandos
   ├── command_counts.json     # Armazena estatísticas de uso dos comandos
-  ├── .env                    # Arquivo EXCHANGE_TOKENde configuração com variáveis sensíveis
+  ├── .env                    # Arquivo de configuração com variáveis sensíveis
 ```
 
 ---
