@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from checks import check_delay
+from func.checks import check_delay
 class CustomHelp(commands.Cog, name="Comandos de ajuda"):
     def __init__(self, bot):
         self.bot = bot
