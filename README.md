@@ -61,17 +61,19 @@ python main.py
 ---
 
 # 📂 Arquivos e Configurações
+
 ## main.py
 O ponto de entrada do bot, responsável por:
 
 Configuração do prefixo e intents.
 Carregamento de cogs.
 Tratamento de erros e eventos.
-checks.py
+
+## checks.py
 Contém funções utilitárias como:
 
 Controle de delay entre comandos dos usuários.
-palavroes.json
+### palavroes.json.
 Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta automática:
 
 ```json
