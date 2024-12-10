@@ -106,9 +106,9 @@ Lista de bibliotecas utilizadas no projeto:
 ---
 
 # 🌟 Contribuição
-### Sinta-se à vontade para contribuir! Abra um *pull request* ou relate problemas na aba issues.
+Sinta-se à vontade para contribuir! Abra um *pull request* ou relate problemas na aba issues.
 
 ---
 
 # 📜 Licença
-### Este projeto é licenciado sob a MIT License. Consulte o arquivo LICENSE para mais detalhes.
+Este projeto é licenciado sob a MIT License. Consulte o arquivo LICENSE para mais detalhes.
