@@ -17,9 +17,13 @@ bot = commands.Bot(command_prefix="!!",help_command=None, intents=discord.Intent
 ##CASO COMANDO INVÁLIDO
 @bot.event
 async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandNotFound):
+    if isinstance(error, commands.MissingRequiredArgument):
+        command = ctx.command
+        # Obtém o help completo do comando
+        await ctx.message.reply(f"❌ Estão faltando argumentos! Para mais informações, use: `{ctx.prefix}{command} --help`")
+    elif isinstance(error, commands.CommandNotFound):
         # Tratamento específico para comando não encontrado
-        await ctx.send("❌ Comando não encontrado. Use `!!ajuda` para ver a lista de comandos disponíveis.")
+        await ctx.message.reply("❌ Comando não encontrado. Use `!!ajuda` para ver a lista de comandos disponíveis.")
     elif isinstance(error, commands.CheckFailure):
         # Tratamento para falha no check (ex: delay de comando)
         print("⚠️ Você não pode usar este comando agora. Aguarde o tempo de delay.")  # Remova o await

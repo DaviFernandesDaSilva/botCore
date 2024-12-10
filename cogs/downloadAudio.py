@@ -15,9 +15,15 @@ class Downloader(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(help="Faz o download do áudio de um vídeo do YouTube.")
+    @commands.command(help="Faz o download do áudio de um vídeo.  ( youtube, twitter, dailymotion, vimeo, instagram )")
     async def downloadAudio(self, ctx, *, url):
         """Comando para baixar o áudio de um vídeo do YouTube"""
+        
+        # Verifica se a URL fornecida é válida
+        if not self.is_valid_audio_url(url):
+            await ctx.send("❌ A URL fornecida não é válida. Por favor, forneça uma URL válida.")
+            return
+
         processingMessage = await ctx.send("🔄 Processando o download do áudio...")
 
         try:
@@ -42,7 +48,12 @@ class Downloader(commands.Cog):
                             'preferredcodec': 'mp3',
                             'preferredquality': '192',
                         }],
-                        'quiet': True
+                        'quiet': True,
+                        'extractor_args': {
+                            'twitter': {
+                                'guest_token': 'new',  # Força a renovação do token
+                            }
+                        }
                     }
                     # Realiza o download com o título já limpo
                     ydl_opts['outtmpl'] = f'{output_dir}/{clean_title}.%(ext)s'
@@ -54,7 +65,7 @@ class Downloader(commands.Cog):
             info = await loop.run_in_executor(None, download_audio)
 
             clean_title = clean_filename(info['title'])
-        
+
             # Caminho do arquivo baixado
             downloaded_file = f"{output_dir}/{clean_title}.mp3"
 
@@ -70,26 +81,51 @@ class Downloader(commands.Cog):
                 # Envia o arquivo compactado ou avisa sobre o tamanho
                 if os.path.exists(compressed_file):
                     print("Arquivo COMPACTADO " + clean_title + ".mp3 enviado com sucesso!")
-                    await ctx.message.reply(f"✅  O áudio `{clean_title}.mp3` foi enviado com sucesso!", file=discord.File(downloaded_file))
+                    await ctx.message.reply(f"✅ O áudio `{clean_title}.mp3` foi enviado com sucesso!", file=discord.File(downloaded_file))
                     os.remove(compressed_file)
                     os.remove(downloaded_file)
                 else:
                     await ctx.send("❌ Não foi possível compactar o arquivo.")
             else:
                 # Envia o arquivo diretamente
-                await ctx.message.reply(f"✅  O áudio `{clean_title}.mp3` foi enviado com sucesso!", file=discord.File(downloaded_file))
+                await ctx.message.reply(f"✅ O áudio `{clean_title}.mp3` foi enviado com sucesso!", file=discord.File(downloaded_file))
                 print("Arquivo " + clean_title + ".mp3 enviado com sucesso!")
                 os.remove(downloaded_file)
 
         except Exception as e:
-            await ctx.send(f"❌ Erro: {e}")
-            
-        await processingMessage.delete()
+            await processingMessage.delete()
+            print(f"❌ Erro: {e}")
+            await ctx.send(f"❌ Ocorreu um erro no download do vídeo. Tente novamente.")
+
+        finally:
+            # Garante que a mensagem de "processando" será deletada
+            await processingMessage.delete()
         
 
     def compress_audio(self, input_file, output_file, bitrate="96k"):
         """Função para compactar o áudio usando FFmpeg"""
         run(["ffmpeg", "-i", input_file, "-b:a", bitrate, output_file, "-y"])
+        
+    def is_valid_audio_url(self, url):
+        """Verifica se a URL é válida para sites de áudio/vídeo suportados pelo yt-dlp."""
+        
+        # Dicionário com plataformas e suas expressões regulares
+        platform_regex = {
+            'youtube': r'(https?://(?:www\.)?youtube\.com/watch\?v=[\w-]+|https?://(?:www\.)?youtu\.be/[\w-]+)',
+            'youtube_music': r'(https?://(?:music\.)?youtube\.com/watch\?v=[\w-]+)',  # Para YouTube Music
+            'soundcloud': r'(https?://(?:www\.)?soundcloud\.com/[\w\-]+/[\w\-]+)',
+            'vimeo': r'(https?://(?:www\.)?vimeo\.com/\d+)',
+            'dailymotion': r'(https?://(?:www\.)?dailymotion\.com/video/[\w-]+)',
+            'twitter': r'(https?://(?:www\.)?x\.com/[\w\-]+/status/\d+)',
+            'instagram': r'(https?://(?:www\.)?instagram\.com/p/[\w\-]+)',
+        }
+
+        # Itera sobre as expressões regulares para as plataformas e verifica a URL
+        for platform, regex in platform_regex.items():
+            if re.match(regex, url):
+                return True  # URL válida para a plataforma encontrada
+        
+        return False  # Nenhuma plataforma válida encontrada
 
 async def setup(bot):
     if "Downloader" not in bot.cogs:
