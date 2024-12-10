@@ -23,7 +23,7 @@ BotCore é um bot para Discord desenvolvido em Python, projetado para oferecer f
   ├── main.py                 # Arquivo principal do bot (ponto de entrada)
   ├── requirements.txt        # Dependências do projeto
   ├── cogs/                   # Diretório com módulos de comandos
-  ├── command_counts.json     # Armazena estatísticas de uso dos comandos
+  ├── command_counts.json     # Armazena estatísticas de forma local ( não recomendada, utilize banco de dados! )
   ├── .env                    # Arquivo de configuração com variáveis sensíveis
 ```
 
@@ -92,7 +92,7 @@ Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta
 
 Configure como desejar!
 
- -
+-
 
 ## requirements.txt
 Lista de bibliotecas utilizadas no projeto:
