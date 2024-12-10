@@ -10,7 +10,7 @@ O bot utiliza a biblioteca `discord.py` e segue uma estrutura modular com suport
 
 ## 🚀 Funcionalidades
 
-- **Moderação**: Bloqueio de palavras inadequadas com respostas automáticas.
+- **Moderação**: Bloqueio de palavras inadequadas com respostas automáticas, anti-spam, anti-flood e outros métodos de moderação.
 - **Comandos Personalizados**: Implementação de diversos comandos com controle de uso e delays configuráveis.
 - **Sistema Modular**: Uso de Cogs para organização dos comandos e eventos.
 - **Logs e Estatísticas**: Monitoramento de comandos e interações dos usuários.
