@@ -71,9 +71,6 @@ Configuração do prefixo e intents.
 Carregamento de cogs.
 Tratamento de erros e eventos.
 
--
-
-
 ## checks.py
 Contém funções utilitárias como:
 
@@ -91,10 +88,8 @@ Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta
   ]
 }
 ```
-
 Configure como desejar!
 
--
 
 ## requirements.txt
 Lista de bibliotecas utilizadas no projeto:
