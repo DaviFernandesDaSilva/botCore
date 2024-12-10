@@ -33,9 +33,9 @@ O bot utiliza a biblioteca `discord.py` e segue uma estrutura modular com suport
 
 ## ⚙️ Instalação e Uso
 ### Pré-requisitos
-Python 3.8 ou superior.
-Um bot registrado no Discord Developer Portal.
-Configuração do arquivo .env com as seguintes variáveis:
+- Python 3.8 ou superior.
+- Um bot registrado no Discord Developer Portal.
+- Configuração do arquivo .env com as seguintes variáveis:
 
 ```bash
 BOT_TOKEN=seu_token_aqui
