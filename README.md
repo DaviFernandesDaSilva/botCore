@@ -75,8 +75,8 @@ O ponto de entrada do bot, responsável por:
 Contém funções utilitárias como:
 
 - Controle de delay entre comandos dos usuários.
-- Lista de palavras monitoradas pelo bot.
-- Cada palavra é associada a uma resposta automática.
+- Lista de palavras-chave monitoradas pelo bot.
+- Cada palavra é associada a uma resposta automática com deletamento da mensagem instantâneo, sujeito a outras punições.
 
  - Exemplo:
 ```json
