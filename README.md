@@ -1,6 +1,8 @@
 # BotCore
 
-BotCore é um bot para Discord desenvolvido em Python, projetado para oferecer funcionalidades interativas e moderar servidores de forma eficiente. O bot utiliza a biblioteca `discord.py` e segue uma estrutura modular com suporte a comandos personalizados, eventos e integração com arquivos de configuração.
+BotCore é um bot para Discord desenvolvido em Python, projetado para oferecer funcionalidades interativas e moderar servidores de forma eficiente.
+
+O bot utiliza a biblioteca `discord.py` e segue uma estrutura modular com suporte a comandos personalizados, eventos e integração com arquivos de configuração.
 
 > **⚠️ Importante:** Este bot ainda está em desenvolvimento. Algumas funcionalidades podem estar incompletas ou sujeitas a alterações.
 
