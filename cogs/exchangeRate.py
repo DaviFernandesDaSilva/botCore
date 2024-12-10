@@ -10,7 +10,7 @@ class ExchangeRateCog(commands.Cog):
     async def converter(self, ctx, amount: float, base_currency: str, target_currency: str):
         """Converte o valor de uma moeda para outra."""
         # URL da API de câmbio
-        url = f"https://v6.exchangerate-api.com/v6/8b63a4ce18bc549b9032fc54/latest/{base_currency.upper()}"
+        url = EXCHANGE_TOKEN
 
         # Fazer requisição para a API
         async with aiohttp.ClientSession() as session:
@@ -39,7 +39,7 @@ class ExchangeRateCog(commands.Cog):
     @commands.command(name="cambio", help="Exibe a taxa de câmbio de BRL para outras moedas.")
     async def cambio(self, ctx, moeda: str):
         """Exibe a taxa de câmbio de BRL para uma moeda solicitada."""
-        url = f"https://v6.exchangerate-api.com/v6/8b63a4ce18bc549b9032fc54/latest/BRL"
+        url = EXCHANGE_TOKEN
         
         # Fazendo a requisição assíncrona
         async with aiohttp.ClientSession() as session:
