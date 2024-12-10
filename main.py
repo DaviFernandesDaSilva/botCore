@@ -12,7 +12,7 @@ load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
-bot = commands.Bot(command_prefix="!!", intents=discord.Intents.all(), application_id=int(os.getenv("BOT_ID")))
+bot = commands.Bot(command_prefix="!!",help_command=None, intents=discord.Intents.all(), application_id=int(os.getenv("BOT_ID")))
 
 ##CASO COMANDO INVÁLIDO
 @bot.event

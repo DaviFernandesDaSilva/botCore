@@ -22,7 +22,7 @@ class PalavroesCog(commands.Cog, name="Repreensão de Palavrões"):
             # Verificar usando expressões regulares
             if re.search(palavrao['word'], message.content, re.IGNORECASE):
                 try:
-                    await message.delete()  # Tentar apagar a mensagem
+                    # await message.delete()  # Tentar apagar a mensagem
                     await message.reply(f"{palavrao['response']}")  # Responder diretamente na mensagem
                 except discord.errors.Forbidden:
                     # Se não conseguir apagar a mensagem, apenas envia a resposta
