@@ -69,13 +69,16 @@ Configuração do prefixo e intents.
 Carregamento de cogs.
 Tratamento de erros e eventos.
 
+-
+
+
 ## checks.py
 Contém funções utilitárias como:
 
 Controle de delay entre comandos dos usuários.
-### palavroes.json.
-Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta automática:
+Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta automática.
 
+ - Exemplo:
 ```json
 {
   "palavroes": [
@@ -89,18 +92,18 @@ Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta
 
 Configure como desejar!
 
----
+ -
 
 ## requirements.txt
 Lista de bibliotecas utilizadas no projeto:
 
-### - discord.py
+- discord.py
 (versão avançada para suporte completo a eventos e comandos)
 
-### - python-dotenv
+ - python-dotenv
 (para gerenciamento de variáveis de ambiente)
 
-### - yt_dlp
+ - yt_dlp
 (suporte a downloads de mídia)
 
 ---
