@@ -21,12 +21,10 @@ BotCore é um bot para Discord desenvolvido em Python, projetado para oferecer f
 ```plaintext
   botCore/
   ├── main.py                 # Arquivo principal do bot (ponto de entrada)
-  ├── checks.py               # Funções utilitárias para controle de comandos
   ├── requirements.txt        # Dependências do projeto
   ├── cogs/                   # Diretório com módulos de comandos
-  ├── palavroes.json          # Lista de palavras monitoradas e respostas automáticas
   ├── command_counts.json     # Armazena estatísticas de uso dos comandos
-  ├── .env                    # Arquivo de configuração com variáveis sensíveis
+  ├── .env                    # Arquivo EXCHANGE_TOKENde configuração com variáveis sensíveis
 ```
 
 ---
@@ -45,7 +43,7 @@ BOT_ID=seu_bot_id_aqui
 Clone este repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/botCore.git
+git clone https://github.com/DaviFernandesDaSilva/botCore.git
 cd botCore
 ```
 ### Instale as dependências:
@@ -54,7 +52,7 @@ cd botCore
 pip install -r requirements.txt
 ```
 
-###Execute o bot:
+### Execute o bot:
 
 ```bash
 python main.py
@@ -80,12 +78,14 @@ Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta
 {
   "palavroes": [
     {
-      "word": "(m|M)erda",
+      "word": "merda",
       "response": "Por favor, evite usar palavras inadequadas."
     }
   ]
 }
 ```
+
+Configure como desejar!
 
 ---
 
@@ -104,7 +104,7 @@ Lista de bibliotecas utilizadas no projeto:
 ---
 
 # 🌟 Contribuição
-### Sinta-se à vontade para contribuir! Abra um pull request ou relate problemas na aba issues.
+### Sinta-se à vontade para contribuir! Abra um *pull request* ou relate problemas na aba issues.
 
 ---
 
