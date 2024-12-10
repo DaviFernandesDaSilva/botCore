@@ -116,9 +116,9 @@ async def on_ready():
     # Obtendo a data e hora atual
     await bot.tree.sync()
     now = datetime.now()
-    data_hora = now.strftime("%d/%m/%Y %H:%M:%S")  # Formato: Dia/Mês/Ano Hora:Minuto:Segundo
+    data_hora = now.strftime("%d/%m/%Y %H:%M:%S") 
     
-    canal_id = 1315495514132971583  # ID do canal de um dos servidores
+    canal_id = 1315495514132971583  # ID do canal pessoal para testes/debug
     canal = bot.get_channel(canal_id)
     
     if canal:
@@ -127,9 +127,18 @@ async def on_ready():
     print(f"🟢 Bot conectado como {bot.user}. Data e Hora de Conexão: {data_hora}")
 
 async def load():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            await bot.load_extension(f'cogs.{filename[:-3]}')
+    for root, _, files in os.walk('./cogs'):  # Percorre pastas e as subpastas
+        for file in files:
+            if file.endswith('.py') and file != '__init__.py':
+                # Gera o Path
+                module = os.path.join(root, file).replace('./', '').replace('/', '.').replace('\\', '.').replace('.py', '')
+                try:
+                    await bot.load_extension(module)
+                    print(f"✔️  Módulo carregado: {module}")
+                except Exception as e:
+                    print(f"❌  Falha ao carregar o módulo {module}: {e}")
+                    
+                    
 
 async def main():
     async with bot:

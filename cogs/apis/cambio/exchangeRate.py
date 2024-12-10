@@ -1,16 +1,21 @@
 import discord
 from discord.ext import commands
 import aiohttp
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class ExchangeRateCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.api_key = os.getenv("EXCHANGE_RATE_API_KEY")
         
     @commands.command(name="converter", help="Converter um valor X de uma moeda pra outra")
     async def converter(self, ctx, amount: float, base_currency: str, target_currency: str):
         """Converte o valor de uma moeda para outra."""
         # URL da API de câmbio
-        url = f"https://v6.exchangerate-api.com/v6/8b63a4ce18bc549b9032fc54/latest/{base_currency.upper()}"
+        url = f"https://v6.exchangerate-api.com/v6/{self.api_key}/latest/{base_currency.upper()}"
 
         # Fazer requisição para a API
         async with aiohttp.ClientSession() as session:
@@ -39,7 +44,7 @@ class ExchangeRateCog(commands.Cog):
     @commands.command(name="cambio", help="Exibe a taxa de câmbio de BRL para outras moedas.")
     async def cambio(self, ctx, moeda: str):
         """Exibe a taxa de câmbio de BRL para uma moeda solicitada."""
-        url = f"https://v6.exchangerate-api.com/v6/8b63a4ce18bc549b9032fc54/latest/BRL"
+        url = f"https://v6.exchangerate-api.com/v6/{self.api_key}/latest/BRL"
         
         # Fazendo a requisição assíncrona
         async with aiohttp.ClientSession() as session:
@@ -64,6 +69,8 @@ class ExchangeRateCog(commands.Cog):
             except Exception as e:
                 await ctx.send(f"⚠️ Erro ao fazer a requisição: {str(e)}")
 
-# Função para adicionar o cog
 async def setup(bot):
-    await bot.add_cog(ExchangeRateCog(bot))
+    if "ExchangeRateCog" not in bot.cogs:
+        await bot.add_cog(ExchangeRateCog(bot))
+    else:
+        print("Cog 'ExchangeRateCog' já carregado!")
