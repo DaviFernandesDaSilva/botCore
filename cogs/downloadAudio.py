@@ -18,7 +18,7 @@ class Downloader(commands.Cog):
     @commands.command(help="Faz o download do áudio de um vídeo do YouTube.")
     async def downloadAudio(self, ctx, *, url):
         """Comando para baixar o áudio de um vídeo do YouTube"""
-        await ctx.send("🔄 Processando o download do áudio...")
+        processingMessage = await ctx.send("🔄 Processando o download do áudio...")
 
         try:
             # Diretório de saída
@@ -69,20 +69,23 @@ class Downloader(commands.Cog):
 
                 # Envia o arquivo compactado ou avisa sobre o tamanho
                 if os.path.exists(compressed_file):
-                    await ctx.send(file=discord.File(compressed_file))
                     print("Arquivo COMPACTADO " + clean_title + ".mp3 enviado com sucesso!")
+                    await ctx.message.reply(f"✅  O áudio `{clean_title}.mp3` foi enviado com sucesso!", file=discord.File(downloaded_file))
                     os.remove(compressed_file)
                     os.remove(downloaded_file)
                 else:
                     await ctx.send("❌ Não foi possível compactar o arquivo.")
             else:
                 # Envia o arquivo diretamente
-                await ctx.send(file=discord.File(downloaded_file))
+                await ctx.message.reply(f"✅  O áudio `{clean_title}.mp3` foi enviado com sucesso!", file=discord.File(downloaded_file))
                 print("Arquivo " + clean_title + ".mp3 enviado com sucesso!")
                 os.remove(downloaded_file)
 
         except Exception as e:
             await ctx.send(f"❌ Erro: {e}")
+            
+        await processingMessage.delete()
+        
 
     def compress_audio(self, input_file, output_file, bitrate="96k"):
         """Função para compactar o áudio usando FFmpeg"""
