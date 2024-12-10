@@ -67,9 +67,9 @@ python main.py
 ## main.py
 O ponto de entrada do bot, responsável por:
 
-Configuração do prefixo e intents.
-Carregamento de cogs.
-Tratamento de erros e eventos.
+- Configuração do prefixo e intents.
+- Carregamento de cogs.
+- Tratamento de erros e eventos.
 
 ## checks.py
 Contém funções utilitárias como:
