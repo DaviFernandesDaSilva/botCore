@@ -74,8 +74,9 @@ O ponto de entrada do bot, responsável por:
 ## checks.py
 Contém funções utilitárias como:
 
-Controle de delay entre comandos dos usuários.
-Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta automática.
+- Controle de delay entre comandos dos usuários.
+- Lista de palavras monitoradas pelo bot.
+- Cada palavra é associada a uma resposta automática.
 
  - Exemplo:
 ```json
@@ -88,6 +89,7 @@ Lista de palavras monitoradas pelo bot. Cada palavra é associada a uma resposta
   ]
 }
 ```
+
 Configure como desejar!
 
 
