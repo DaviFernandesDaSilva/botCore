@@ -83,7 +83,7 @@ Contém funções utilitárias como:
 {
   "palavroes": [
     {
-      "word": "merda",
+      "word": "feio",
       "response": "Por favor, evite usar palavras inadequadas."
     }
   ]
