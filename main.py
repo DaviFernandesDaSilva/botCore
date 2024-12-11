@@ -120,7 +120,6 @@ async def reload_cogs():
             extension_name = f'cogs.{filename[:-3]}'
             await unload(extension_name)  # Passa o nome da extensão corretamente
             await load(extension_name)  # Passa o nome da extensão corretamente
-
 async def main():
     # Espera o carregamento dos cogs
     async with bot:
