@@ -32,84 +32,6 @@ async def on_command_error(ctx, error):
         await ctx.send(f"⚠️ Ocorreu um erro: {str(error)}")
         print(f"Erro em {ctx.command}: {error}")
 
-# Variável global para verificar se o comando está sendo executado
-is_syncing = False
-
-@bot.command(hidden=True)
-@commands.is_owner()
-async def syncReload(ctx, guild=None):
-    global is_syncing
-    
-    if is_syncing:
-        await ctx.send("O processo de recarga já está em andamento. Tente novamente mais tarde.")
-        return
-
-    try:
-        # Marca o tempo de início
-        is_syncing = True
-        start_time = time.time()
-
-        canal_id = 1315495514132971583  # ID do canal de um dos servidores
-        canal = bot.get_channel(canal_id)
-        now = datetime.now()
-        data_hora = now.strftime("%d/%m/%Y %H:%M:%S")
-        
-        if canal:
-            await canal.send(f"**🔄 O Bot começou a recarregar às {data_hora}... 🔄**")
-        
-        # Sincroniza os comandos
-        if guild is None:
-            synced = await bot.tree.sync()
-        else:
-            synced = await bot.tree.sync(guild=discord.Object(id=int(guild)))
-        
-        print(f"Comandos sincronizados: {synced}")
-
-        # Recarrega todos os cogs na pasta 'cogs'
-        cogs_dir = './cogs'
-        cogs = [filename[:-3] for filename in os.listdir(cogs_dir) if filename.endswith('.py')]
-        
-        for cog_name in cogs:
-            try:
-                # Verifica se o cog está carregado e o descarrega
-                if f'cogs.{cog_name}' in bot.extensions:
-                    await bot.unload_extension(f'cogs.{cog_name}')
-                    print(f"Módulo {cog_name} descarregado com sucesso!")
-
-                # Carrega ou recarrega o cog
-                await bot.load_extension(f'cogs.{cog_name}')
-                print(f"Módulo {cog_name} carregado com sucesso!")
-                await asyncio.sleep(0.5)  # Pausa para evitar sobrecarga
-            except Exception as e:
-                print(f"Erro ao recarregar o módulo {cog_name}: {e}")
-                await ctx.send(f"⚠️ Erro ao recarregar o módulo `{cog_name}`: `{e}`")
-        
-        # Marca o tempo de término
-        end_time = time.time()
-
-        # Calcula o tempo total de execução
-        execution_time = end_time - start_time
-        print(f"Tempo total de execução: {execution_time:.2f} segundos")
-
-        # Confirmação de sincronização
-        await canal.send(f"✅ **Sincronizado e módulos recarregados com sucesso! ✔️** _(Tempo de execução: {execution_time:.2f} segundos)_")
-        
-        # Envia o horário de término do processo
-        now = datetime.now()
-        data_hora = now.strftime("%d/%m/%Y %H:%M:%S")
-        if canal:
-            await canal.send(f"**🔄 O Bot terminou de ser Recarregado em {data_hora}** ✅")
-        await ctx.send(f"**Tudo sincronizado!✅**")
-
-    except Exception as e:
-        # Tratamento de erros gerais
-        print(f"Erro durante o syncReload: {e}")
-        await ctx.send(f"⚠️ **Erro durante o syncReload:** `{e}`")
-
-    finally:
-        is_syncing = False
-
-
 #AO LIGAR
 @bot.event
 async def on_ready():
@@ -125,25 +47,90 @@ async def on_ready():
         await canal.send(f"**🟢 Bot ligado em {data_hora}** 🚀")
     
     print(f"🟢 Bot conectado como {bot.user}. Data e Hora de Conexão: {data_hora}")
+    
 
-async def load():
-    for root, _, files in os.walk('./cogs'):  # Percorre pastas e as subpastas
-        for file in files:
-            if file.endswith('.py') and file != '__init__.py':
-                # Gera o Path
-                module = os.path.join(root, file).replace('./', '').replace('/', '.').replace('\\', '.').replace('.py', '')
-                try:
-                    await bot.load_extension(module)
-                    print(f"✔️  Módulo carregado: {module}")
-                except Exception as e:
-                    print(f"❌  Falha ao carregar o módulo {module}: {e}")
-                    
-                    
+is_syncing = False
+
+@bot.command(hidden=True)
+@commands.is_owner()
+async def syncReload(ctx, guild=None):
+    """Comando para sincronizar e recarregar cogs."""
+    global is_syncing
+    
+    if is_syncing:
+        await ctx.send("O processo de recarga já está em andamento. Tente novamente mais tarde.")
+        return
+
+    is_syncing = True
+    start_time = time.time()
+
+    canal_id = 1315495514132971583  # ID do canal de um dos servidores
+    canal = bot.get_channel(canal_id)
+    data_hora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    
+    if canal:
+        await canal.send(f"🔄 O Bot começou a recarregar às {data_hora}...")
+
+    try:
+        # Sincroniza os comandos
+        synced = await bot.tree.sync(guild=discord.Object(id=int(guild)) if guild else None)
+        print(f"Comandos sincronizados: {synced}")
+
+        # Recarrega os cogs
+        await reload_cogs()
+
+        # Marca o tempo de término e calcula o tempo total de execução
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print(f"Tempo total de execução: {execution_time:.2f} segundos")
+
+        # Envia mensagens de confirmação
+        if canal:
+            await canal.send(f"✅ Sincronizado e módulos recarregados com sucesso! (Tempo: {execution_time:.2f} segundos)")
+            data_hora = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+            await canal.send(f"🔄 O Bot terminou de ser Recarregado em {data_hora} ✅")
+
+        await ctx.send("Tudo sincronizado! ✅")
+
+    except Exception as e:
+        print(f"Erro durante o syncReload: {e}")
+        await ctx.send(f"⚠️ Erro durante o syncReload: {e}")
+
+    finally:
+        is_syncing = False
+
+
+async def unload(extension_name):
+    """Descarrega a extensão se já estiver carregada."""
+    if extension_name in bot.extensions:
+        await bot.unload_extension(extension_name)
+        print(f"Descarregando a extensão: {extension_name}")
+
+
+async def load(extension_name):
+    """Carrega uma extensão."""
+    await bot.load_extension(extension_name)
+    print(f"A extensão: {extension_name} carregou.")
+
+
+async def reload_cogs():
+    """Descarrega e recarrega todas as extensões de cogs."""
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            extension_name = f'cogs.{filename[:-3]}'
+            await unload(extension_name)  # Passa o nome da extensão corretamente
+            await load(extension_name)  # Passa o nome da extensão corretamente
 
 async def main():
+    # Espera o carregamento dos cogs
     async with bot:
-        await load();
+        # Recarregar todos os cogs antes de iniciar o bot
+        await reload_cogs()
+
+        # Recupera o TOKEN do ambiente
         TOKEN = os.getenv("DISCORD_TOKEN")
+
+        # Inicia o bot com o token
         await bot.start(TOKEN)
 
 asyncio.run(main())

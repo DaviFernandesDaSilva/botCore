@@ -1,12 +1,15 @@
+import yt_dlp as yt_dlp
 import discord
 from discord.ext import commands
+import asyncio
+import os
+
 from func.checks import check_delay
 class CustomHelp(commands.Cog, name="Comandos de ajuda"):
     def __init__(self, bot):
         self.bot = bot
         
     @commands.command(name="help", aliases=["ajuda"],help="Exibe a lista de comandos disponíveis ou ajuda específica para um comando.")
-    @commands.check(check_delay)
     async def help(self, ctx, comando: str = None):
         """Comando personalizado para exibir a lista de comandos ou detalhes de um comando específico."""
         if comando is None:
