@@ -126,10 +126,8 @@ async def main():
     async with bot:
         # Recarregar todos os cogs antes de iniciar o bot
         await reload_cogs()
-
         # Recupera o TOKEN do ambiente
         TOKEN = os.getenv("DISCORD_TOKEN")
-
         # Inicia o bot com o token
         await bot.start(TOKEN)
 
