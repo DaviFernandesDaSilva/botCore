@@ -1,6 +1,7 @@
+**/__pycache__/
 /.env
 /funf.txt
 /requirements.txt
 /squarecloud.app
-command_counts.json
-**/__pycache__/
+/command_counts.json
+
