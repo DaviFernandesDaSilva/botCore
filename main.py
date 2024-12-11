@@ -130,5 +130,4 @@ async def main():
         TOKEN = os.getenv("DISCORD_TOKEN")
         # Inicia o bot com o token
         await bot.start(TOKEN)
-
 asyncio.run(main())
