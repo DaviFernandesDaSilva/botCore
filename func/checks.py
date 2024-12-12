@@ -1,4 +1,5 @@
 import time
+from discord.ext import commands
 
 # Dicionário para armazenar o tempo do último comando de cada usuário
 user_last_command_time = {}
@@ -7,6 +8,10 @@ user_last_command_time = {}
 async def check_delay(ctx):
     delay_time = 5  # Tempo de delay em segundos
     current_time = time.time()  # Tempo atual em segundos
+
+    # Verifica se o usuário é o dono do bot
+    if await commands.is_owner().predicate(ctx):
+        return True  # Sem delay para o dono do bot
 
     # Verifica o tempo do último comando enviado pelo usuário
     last_command_time = user_last_command_time.get(ctx.author.id)
@@ -19,5 +24,5 @@ async def check_delay(ctx):
     else:
         # Se não respeitou o delay, retorna False
         remaining_time = delay_time - (current_time - last_command_time)
-        await ctx.send(f"{ctx.author.mention}, por favor, espere {remaining_time:.1f} segundos antes de usar outro comando.")
+        await ctx.send(f":warning: {ctx.author.mention}, por favor, espere {remaining_time:.1f} segundos antes de usar outro comando.")
         return False  # Bloqueia o comando

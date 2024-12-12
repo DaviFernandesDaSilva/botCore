@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands
+from PIL import Image, ImageSequence
+import io
 
 from func.checks import check_delay
 
@@ -58,24 +60,22 @@ class CommandsCogTeste(commands.Cog, name="Comandos para testes"):
     async def testarEmoji(self, ctx):
         await ctx.send("<:catcrying:1315507542864171060>")
         
-    @commands.command(name="shrek", help="Assista o filme do shrek inteiro.")
-    async def shrek(self,ctx):
-        # Obtém a URL da imagem do avatar do bot (foto de perfil)
-        bot_image_url = str(self.user.avatar_url_as(size=2048))  # Tamanho máximo possível de 2048x2048
+    @commands.command(name="shrek", help="Assista o filme do Shrek inteiro.")
+    @commands.check(check_delay)
+    async def shrek(self, ctx):
+        file_path = "./downloads/shrekMovie.gif"
         
-        # Cria o Embed
-        embed = discord.Embed(title="Aqui está a imagem do bot em tamanho grande!", color=discord.Color.blue())
-        embed.set_image(url=bot_image_url)
+        try:
+            await ctx.message.reply(file=discord.File(file_path))
+        except FileNotFoundError:
+            await ctx.send("❌ O arquivo do filme não foi encontrado.")
+        except Exception as e:
+            await ctx.send(f"❌ Ocorreu ao enviar o arquivo: {e}")
         
-        # Envia o Embed
-        await ctx.send(embed=embed)
-        
-    
-
 # Função para configurar o cog
 async def setup(bot):
     # Verifica se o cog já foi carregado antes de adicionar novamente
     if "CommandsCogTeste" not in bot.cogs:
         await bot.add_cog(CommandsCogTeste(bot))  # Await ao adicionar o cog
     else:
-        print("Cog 'CommandsCog' já carregado!")
+        print("Cog 'CommandsCogTeste' já carregado!")

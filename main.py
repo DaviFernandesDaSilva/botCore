@@ -108,25 +108,34 @@ async def syncReload(ctx, guild=None):
 
 
 async def unload(extension_name):
-    """Descarrega a extensão se já estiver carregada."""
     if extension_name in bot.extensions:
-        await bot.unload_extension(extension_name)
-        print(f"Descarregando a extensão: {extension_name}")
+        try:
+            await bot.unload_extension(extension_name)
+            print(f"Descarregando a extensão: {extension_name}")
+        except Exception as e:
+            print(f"Erro ao descarregar a extensão {extension_name}: {e}")
 
 
 async def load(extension_name):
-    """Carrega uma extensão."""
-    await bot.load_extension(extension_name)
-    print(f"A extensão: {extension_name} carregou.")
+    try:
+        await bot.load_extension(extension_name)
+        print(f"A extensão: {extension_name} carregou.")
+    except Exception as e:
+        print(f"Erro ao carregar a extensão {extension_name}: {e}")
+
 
 
 async def reload_cogs():
-    """Descarrega e recarrega todas as extensões de cogs."""
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            extension_name = f'cogs.{filename[:-3]}'
-            await unload(extension_name)  # Passa o nome da extensão corretamente
-            await load(extension_name)  # Passa o nome da extensão corretamente
+    cogs_dir = './cogs'
+
+    for root, _, files in os.walk(cogs_dir):
+        for file in files:
+            if file.endswith('.py') and file != '__init__.py':
+                
+                extension_name = os.path.join(root, file).replace('./', '').replace('/', '.').replace('\\', '.').replace('.py', '')
+                await unload(extension_name)  
+                await load(extension_name)  
+
 async def main():
     # Espera o carregamento dos cogs
     async with bot:
