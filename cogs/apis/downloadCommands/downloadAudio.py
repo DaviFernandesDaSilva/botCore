@@ -85,12 +85,49 @@ class Downloader(commands.Cog):
         """Realiza a pesquisa de áudio e baixa a opção escolhida."""
         search_results = await self.search_audio(query)
 
-        # Criação do embed com os resultados da pesquisa
-        embed = discord.Embed(title="🔍 Resultados da Pesquisa", color=discord.Color.blurple())
-        for i, entry in enumerate(search_results[:5], 1):
-            embed.add_field(name=f"{i}. {entry['title'][:95]}", value=f"Canal: {entry['uploader']}", inline=False)
+        # Filtrando os resultados para limitar músicas de até 10 minutos (600 segundos)
+        filtered_results = [entry for entry in search_results if entry['duration'] <= 600]
 
-        # Criação do menu suspenso
+        if not filtered_results:
+            await ctx.send("❌ Nenhuma música encontrada com duração de até 10 minutos.")
+            return
+
+        # Criação do embed de resultados
+        embed = discord.Embed(
+            title=f"🔍 Resultados da pesquisa para: {query}",
+            description="Escolha uma música abaixo para fazer o download:",
+            color=discord.Color.blue()  # Usando uma cor mais vibrante
+        )
+
+        # Adicionando uma imagem de capa (opcional)
+        embed.set_thumbnail(url="https://link.da.imagem/de/capa.png")  # Adicione um link de imagem para a capa
+
+        # Loop para adicionar cada resultado no embed
+        for i, entry in enumerate(filtered_results[:5], 1):
+            # Formatando a duração para o formato 1:35, 5:30, etc.
+            minutes = int(entry['duration'] // 60)
+            seconds = int(entry['duration'] % 60)
+            duration = f"{minutes}:{seconds:02}"  # Formata os segundos para sempre ter 2 dígitos
+
+            # Verificando se a chave 'thumbnail' existe
+            thumbnail_url = entry.get('thumbnail', None)  # Usa 'None' se a chave não existir
+
+            # Usando blockquote para destacar o título e as informações
+            embed.add_field(
+                name=f"**{i}. {entry['title'][:90]}**",  # Exibe o título da música, cortado para 90 caracteres
+                value=f"> **Duração**: {duration}\n> **Canal**: {entry['uploader']}",
+                inline=False
+            )
+
+            # Adicionando a thumbnail da música, caso exista
+            if thumbnail_url:
+                embed.set_footer(text="Clique na música para mais informações.")  # Sugerir ação
+                embed.set_image(url=thumbnail_url)  # Adiciona a imagem da música
+
+        # Enviando o embed para o canal
+        await ctx.send(embed=embed)
+
+        # Criando o menu suspenso
         class AudioSelect(discord.ui.View):
             def __init__(self, results):
                 super().__init__(timeout=30)
@@ -98,7 +135,7 @@ class Downloader(commands.Cog):
 
                 select = discord.ui.Select(placeholder="Escolha uma das opções de áudio...")
 
-                for i, entry in enumerate(results[:5], 1):
+                for i, entry in enumerate(filtered_results[:5], 1):
                     select.add_option(label=f"{i}. {entry['title'][:95]}", value=entry['url'])
 
                 select.callback = self.select_callback
@@ -109,28 +146,18 @@ class Downloader(commands.Cog):
                 await interaction.response.defer()
                 self.stop()
 
-        # Enviar o embed com os resultados e o menu suspenso
-        view = AudioSelect(search_results)
-        message = await ctx.send(embed=embed, view=view)
+        view = AudioSelect(filtered_results)
+        await ctx.send("🔍 Escolha o áudio desejado no menu abaixo:", view=view)
 
         await view.wait()
 
-        # Apagar a mensagem de pesquisa e o menu suspenso
-        await message.delete()
-
         if view.selected_url:
-            # Apagar o embed e mostrar o áudio escolhido com embed
-            selected_audio = next(entry for entry in search_results if entry['url'] == view.selected_url)
-            embed_choice = discord.Embed(
-                title=f"🎵 Música escolhida: {selected_audio['title']}",
-                description=f"Canal: {selected_audio['uploader']}",
-                url=selected_audio['url'],
-                color=discord.Color.green()
-            )
-            await ctx.send(embed=embed_choice)
             await self.download_from_url(ctx, view.selected_url)
         else:
             await ctx.send("❌ Você não escolheu nenhuma opção a tempo!")
+
+
+
 
     def is_valid_audio_url(self, url):
         """Verifica se a URL é válida para sites de áudio/vídeo suportados pelo yt-dlp."""
