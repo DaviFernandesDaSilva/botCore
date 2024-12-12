@@ -2,6 +2,8 @@ import discord
 import random
 from discord.ext import commands
 
+from func.checks import check_delay
+
 # Definindo um cog com comandos
 class CommandsCog(commands.Cog, name="Comandos básicos"):
     def __init__(self, bot):
@@ -9,6 +11,7 @@ class CommandsCog(commands.Cog, name="Comandos básicos"):
         
     # Comando !!infoUsuario para exibir informações do bot
     @commands.command(help="Mostra a latência do bot.", description="Descrição detalhada sobre o comando.")
+    @commands.check(check_delay)
     async def infoBot(self, ctx):
         embed = discord.Embed(title="Informações do Bot", description="Este é um bot de testes", color=discord.Color.blue())
         embed.add_field(name="Versão", value="0.1.5")
@@ -19,6 +22,7 @@ class CommandsCog(commands.Cog, name="Comandos básicos"):
 
     # Comando !!infoUsuario para pegar informações de um usuário
     @commands.command(help="Mostra informações de um usuário mencionado ou si próprio")
+    @commands.check(check_delay)
     async def infoUsuario(self, ctx, usuario: discord.User = None):  # Adicionando 'self' e 'ctx'
         if usuario is None:
             usuario = ctx.author  # Se nenhum usuário for mencionado, pega o autor do comando

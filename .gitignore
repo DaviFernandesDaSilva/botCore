@@ -1,7 +1,9 @@
-**/__pycache__/
 /.env
 /funf.txt
 /requirements.txt
 /squarecloud.app
 /command_counts.json
 
+__pycache__/
+*.py[cod]
+*$py.class

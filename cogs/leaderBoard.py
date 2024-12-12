@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 import json
 
+from func.checks import check_delay
+
 COMMANDS_FILE = "command_counts.json"
 
 # Função para carregar os dados de contagem
@@ -15,6 +17,7 @@ class LeaderboardCog(commands.Cog, name="Leaderboard de Comandos"):
         self.bot = bot
 
     @commands.command(name="topComandos")
+    @commands.check(check_delay)
     async def leaderboard(self, ctx):
         """Mostra o leaderboard dos usuários com mais comandos executados"""
         # Carregar as contagens de comandos

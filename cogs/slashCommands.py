@@ -2,11 +2,14 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+from func.checks import check_delay
+
 class DMSlash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @app_commands.command(name="mandardm", description="Envia uma mensagem privada para você.")
+    @commands.check(check_delay)
     async def send_dm(self, interaction: discord.Interaction):
         try:
             user = interaction.user

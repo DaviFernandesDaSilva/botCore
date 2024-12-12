@@ -4,6 +4,8 @@ from discord.ext import commands
 import asyncio
 import os
 
+from func.checks import check_delay
+
 class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -21,6 +23,7 @@ class Music(commands.Cog):
             return search_results['entries']
 
     @commands.command(help="Toca uma música do YouTube. Pesquise pelo nome!")
+    @commands.check(check_delay)
     async def play(self, ctx, *, search_query):
         """Comando para tocar música do YouTube, pesquisa pelo nome"""
         if ctx.author.voice is None:

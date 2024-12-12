@@ -4,6 +4,8 @@ import aiohttp
 from dotenv import load_dotenv
 import os
 
+from func.checks import check_delay
+
 # Carrega as variáveis do arquivo .env
 load_dotenv()
 
@@ -14,6 +16,7 @@ class LeagueCog(commands.Cog):
         self.base_url = "https://americas.api.riotgames.com/" 
 
     @commands.command(name="summoner", help="Busca informações sobre um invocador (summoner) no BR1")
+    @commands.check(check_delay)
     async def summoner(self, ctx, gameName: str, tagLine: str): 
         """Obtém informações sobre um invocador usando a API da Riot Games na região BR1."""
         url = f"{self.base_url}riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine}"

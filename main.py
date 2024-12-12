@@ -11,8 +11,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
+intents = discord.Intents.all()  # Ativa todos os intents
 
-bot = commands.Bot(command_prefix="!!",help_command=None, intents=discord.Intents.all(), application_id=int(os.getenv("BOT_ID")))
+# Inicializando o bot
+bot = commands.Bot(
+    command_prefix="!!", 
+    help_command=None,  
+    intents=intents,  
+    application_id=int(os.getenv("BOT_ID"))  
+)
 
 ##CASO COMANDO INVÁLIDO
 @bot.event
@@ -51,7 +58,7 @@ async def on_ready():
 
 is_syncing = False
 
-@bot.command(hidden=True)
+@bot.command(name="syncReload", aliases=["sync","reload"],hidden=True)
 @commands.is_owner()
 async def syncReload(ctx, guild=None):
     """Comando para sincronizar e recarregar cogs."""

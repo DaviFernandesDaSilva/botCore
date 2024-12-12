@@ -10,6 +10,7 @@ class CustomHelp(commands.Cog, name="Comandos de ajuda"):
         self.bot = bot
         
     @commands.command(name="help", aliases=["ajuda"],help="Exibe a lista de comandos disponíveis ou ajuda específica para um comando.")
+    @commands.check(check_delay)
     async def help(self, ctx, comando: str = None):
         """Comando personalizado para exibir a lista de comandos ou detalhes de um comando específico."""
         if comando is None:

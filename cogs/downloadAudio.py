@@ -6,6 +6,8 @@ import asyncio
 import discord
 import re
 
+from func.checks import check_delay
+
 # Função para limpar o nome do arquivo
 def clean_filename(filename):
     # Substitui caracteres inválidos do Windows por underline ou os remove
@@ -16,6 +18,7 @@ class Downloader(commands.Cog):
         self.bot = bot
 
     @commands.command(help="Faz o download do áudio de um vídeo.  ( youtube, twitter, dailymotion, vimeo, instagram )")
+    @commands.check(check_delay)
     async def downloadAudio(self, ctx, *, url):
         """Comando para baixar o áudio de um vídeo do YouTube"""
         

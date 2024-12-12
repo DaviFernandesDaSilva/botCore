@@ -4,6 +4,8 @@ import aiohttp
 import os
 from dotenv import load_dotenv
 
+from func.checks import check_delay
+
 load_dotenv()
 
 class ExchangeRateCog(commands.Cog):
@@ -12,6 +14,7 @@ class ExchangeRateCog(commands.Cog):
         self.api_key = os.getenv("EXCHANGE_RATE_API_KEY")
         
     @commands.command(name="converter", help="Converter um valor X de uma moeda pra outra")
+    @commands.check(check_delay)
     async def converter(self, ctx, amount: float, base_currency: str, target_currency: str):
         """Converte o valor de uma moeda para outra."""
         # URL da API de câmbio

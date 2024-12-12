@@ -4,6 +4,8 @@ import aiohttp
 import os
 from dotenv import load_dotenv
 
+from func.checks import check_delay
+
 load_dotenv()
 
 class Cambio(commands.Cog):
@@ -12,6 +14,7 @@ class Cambio(commands.Cog):
         self.api_key = os.getenv("EXCHANGE_RATE_API_KEY")
     
     @commands.command(name="cambio", help="Exibe a taxa de câmbio de BRL para outras moedas.")
+    @commands.check(check_delay)
     async def cambio(self, ctx, moeda: str):
         """Exibe a taxa de câmbio de BRL para uma moeda solicitada."""
         url = f"https://v6.exchangerate-api.com/v6/{self.api_key}/latest/BRL"

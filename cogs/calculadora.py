@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from numpy import *
 import numexpr
+
+from func.checks import check_delay
 class CalculadoraCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -12,6 +14,7 @@ class CalculadoraCog(commands.Cog):
         aliases=["soma", "mult", "sub", "div", "calcular"],
         help="Realiza cálculos aritméticos. Exemplo: `!!calc 2+2` ou `!!calc 5*3`."
     )
+    @commands.check(check_delay)
     async def calcular(self, ctx, *, expression: str = None):
         # Verifica se o argumento foi fornecido
         if not expression:
