@@ -1,4 +1,3 @@
-import random
 import discord
 from discord.ext import commands
 import logging
@@ -21,29 +20,10 @@ bot = commands.Bot(
     application_id=int(os.getenv("BOT_ID"))  
 )
 
-##CASO COMANDO INVÁLIDO
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.MissingRequiredArgument):
-        command = ctx.command
-        # Obtém o help completo do comando
-        await ctx.message.reply(f"❌ Estão faltando argumentos! Para mais informações, use: `{ctx.prefix}{command} --help`")
-    elif isinstance(error, commands.CommandNotFound):
-        # Tratamento específico para comando não encontrado
-        await ctx.message.reply("❌ Comando não encontrado. Use `!!ajuda` para ver a lista de comandos disponíveis.")
-    elif isinstance(error, commands.CheckFailure):
-        # Tratamento para falha no check (ex: delay de comando)
-        print("⚠️ Você não pode usar este comando agora. Aguarde o tempo de delay.")  # Remova o await
-    else:
-        # Para outros tipos de erro, se necessário
-        await ctx.send(f"⚠️ Ocorreu um erro: {str(error)}")
-        print(f"Erro em {ctx.command}: {error}")
-
-#AO LIGAR
+# Ao ligar
 @bot.event
 async def on_ready():
     # Obtendo a data e hora atual
-    await bot.tree.sync()
     now = datetime.now()
     data_hora = now.strftime("%d/%m/%Y %H:%M:%S") 
     
@@ -54,11 +34,13 @@ async def on_ready():
         await canal.send(f"**🟢 Bot ligado em {data_hora}** 🚀")
     
     print(f"🟢 Bot conectado como {bot.user}. Data e Hora de Conexão: {data_hora}")
-    
+
+    # Agora que o bot está pronto, chamamos a sincronização dos comandos
+    await reload_cogs()
 
 is_syncing = False
 
-@bot.command(name="syncReload", aliases=["sync","reload"],hidden=True)
+@bot.command(name="syncReload", aliases=["sync", "reload"], hidden=True)
 @commands.is_owner()
 async def syncReload(ctx, guild=None):
     """Comando para sincronizar e recarregar cogs."""
@@ -111,7 +93,6 @@ async def unload(extension_name):
     if extension_name in bot.extensions:
         try:
             await bot.unload_extension(extension_name)
-            print(f"Descarregando a extensão: {extension_name}")
         except Exception as e:
             print(f"Erro ao descarregar a extensão {extension_name}: {e}")
 
@@ -119,30 +100,32 @@ async def unload(extension_name):
 async def load(extension_name):
     try:
         await bot.load_extension(extension_name)
-        print(f"A extensão: {extension_name} carregou.")
     except Exception as e:
         print(f"Erro ao carregar a extensão {extension_name}: {e}")
-
 
 
 async def reload_cogs():
     cogs_dir = './cogs'
 
+    # Carregar as extensões novamente
     for root, _, files in os.walk(cogs_dir):
         for file in files:
             if file.endswith('.py') and file != '__init__.py':
-                
                 extension_name = os.path.join(root, file).replace('./', '').replace('/', '.').replace('\\', '.').replace('.py', '')
                 await unload(extension_name)  
-                await load(extension_name)  
+                await load(extension_name)
+
+    # Sincronizar os comandos após recarregar todos os cogs
+    await bot.tree.sync()
+
 
 async def main():
     # Espera o carregamento dos cogs
     async with bot:
-        # Recarregar todos os cogs antes de iniciar o bot
-        await reload_cogs()
         # Recupera o TOKEN do ambiente
         TOKEN = os.getenv("DISCORD_TOKEN")
         # Inicia o bot com o token
         await bot.start(TOKEN)
+
+
 asyncio.run(main())

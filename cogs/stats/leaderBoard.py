@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import app_commands
 import json
 
 from func.checks import check_delay
@@ -15,7 +16,7 @@ def load_command_counts():
 class LeaderboardCog(commands.Cog, name="Placares"):
     def __init__(self, bot):
         self.bot = bot
-
+        
     @commands.command(name="topComandos")
     @commands.check(check_delay)
     async def leaderboard(self, ctx):

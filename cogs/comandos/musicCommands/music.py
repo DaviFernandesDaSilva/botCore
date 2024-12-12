@@ -228,6 +228,59 @@ class Music(commands.Cog, name="Comandos de Música"):
             await ctx.send("❌ Você não escolheu nenhuma opção a tempo!")
             
         await lista.delete()
+        
+    @commands.command(name="stop", aliases=["parar"], help="Para a música e desconecta o bot do canal de voz.")
+    async def stop(self, ctx):
+        """Comando para parar a música e desconectar do canal de voz."""
+        voice_client = ctx.voice_client
+        if voice_client is None:
+            await ctx.message.reply("> ❌  **Não estou conectado a nenhum canal de voz.** `Use -> !!play`")
+            return
+
+        # Para a música atual, se houver
+        if voice_client.is_playing():
+            await self.stop_audio(ctx)
+            await ctx.message.reply("⏸️  **A música foi interrompida.**")
+        else:
+            await ctx.message.reply("⚠️  **Não estou tocando nenhuma música no momento.**")
+
+    @commands.command(name="resume", aliases=["retomar", "continuar"], help="Retoma a música que foi pausada.")
+    async def resume(self, ctx):
+        """Comando para retomar a música que foi pausada."""
+        voice_client = ctx.voice_client  # Obtém a instância do cliente de voz do bot
+        
+        if voice_client is None:
+            await ctx.message.reply("> ❌  **Não estou conectado a nenhum canal de voz.** `Use -> !!play`")
+            return
+        
+        if not voice_client.is_playing():
+            await ctx.message.reply("> ⚠️  **Não estou tocando nenhuma música no momento.**")
+            return
+
+        if not voice_client.is_paused():
+            await ctx.message.reply("> ❌  **A música não está pausada.**")
+            return
+
+        # Retorna a música que foi pausada
+        voice_client.resume()
+        await ctx.message.reply("> ▶️  **Música retomada!**")
+
+    @commands.command(name="pause", aliases=["pausar"], help="Pausa a música que está tocando.")
+    async def pause(self, ctx):
+        """Comando para pausar a música."""
+        voice_client = ctx.voice_client  # Obtém a instância do cliente de voz do bot
+
+        if voice_client is None:
+            await ctx.message.reply("> ❌  **Não estou conectado a nenhum canal de voz.** `Use -> !!play`")
+            return
+
+        if not voice_client.is_playing():
+            await ctx.message.reply("> ❌  **Não está tocando nenhuma música no momento.**")
+            return
+
+        # Pausa a música
+        voice_client.pause()
+        await ctx.message.reply("> ⏸️  **Música pausada.**")
 
 async def setup(bot):
     await bot.add_cog(Music(bot))
