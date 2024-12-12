@@ -128,7 +128,7 @@ class Music(commands.Cog, name="Comandos de Música"):
             except Exception as e:
                 print(f"Erro ao tentar desconectar: {e}")  # Depuração
 
-    @commands.command(help="Toca uma música do YouTube. Pesquise pelo nome!")
+    @commands.command(name="play", aliases=["tocar","p"], help="Toca uma música do YouTube. Pesquise pelo nome!")
     @commands.check(check_delay)
     async def play(self, ctx, *, search_query):
         """Comando para tocar música do YouTube, pesquisa pelo nome"""
@@ -179,7 +179,7 @@ class Music(commands.Cog, name="Comandos de Música"):
                 embed.set_image(url=thumbnail_url)  # Adiciona a imagem da música
 
         # Enviando o embed para o canal
-        await ctx.send(embed=embed)
+        lista = await ctx.send(embed=embed)
 
         # Criando o menu suspenso
         class AudioSelect(discord.ui.View):
@@ -226,6 +226,8 @@ class Music(commands.Cog, name="Comandos de Música"):
             await self.play_music(ctx, view.selected_url)
         else:
             await ctx.send("❌ Você não escolheu nenhuma opção a tempo!")
+            
+        await lista.delete()
 
 async def setup(bot):
     await bot.add_cog(Music(bot))
