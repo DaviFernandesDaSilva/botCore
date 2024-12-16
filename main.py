@@ -103,7 +103,6 @@ async def load(extension_name):
     except Exception as e:
         print(f"Erro ao carregar a extensão {extension_name}: {e}")
 
-
 async def reload_cogs():
     cogs_dir = './cogs'
 
